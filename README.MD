@@ -31,3 +31,7 @@ deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted univer
 deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
 deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
 ```
+### 继续执行脚本
+```
+virtualenv --no-site-packages -p /usr/bin/python2.7 venv
+```
