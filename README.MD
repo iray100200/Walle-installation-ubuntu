@@ -10,6 +10,12 @@ cd /etc/apt
 vim sources.list
 ```
 ```
+apt-get update
+```
+```
+apt-get install gcc
+```
+```
 deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
 deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
 
