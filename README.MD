@@ -1,6 +1,6 @@
 # Walle 安装指南
 
-## ENV: Ubuntu 18.4(bonic)
+## 依赖Ubuntu 18.4(bonic)
 ### 1. 国内切换apt镜像地址
 ```
 cd /etc/apt
