@@ -40,6 +40,51 @@ sh admin.sh init
 ```
 virtualenv --no-site-packages -p /usr/bin/python2.7 venv
 ```
+### nginx配置
+- 将下列代码复制到/etc/nginx/nginx.conf（http下）
+```
+upstream webservers {
+    server 0.0.0.0:5000 weight=1; # 负载设置
+}
+
+server {
+    listen       8000; # 默认80貌似不行
+    server_name  admin.walle-web.io; # 域名设置
+    access_log   /usr/local/nginx/logs/walle.log main;
+    index index.html index.htm; # 日志目录
+
+    location / {
+        try_files $uri $uri/ /index.html;
+        add_header access-control-allow-origin *;
+        root /walle-web/fe; # 前端代码已集成到walle-web，即walle-web/fe的绝对路径
+    }
+
+    location ^~ /api/ {
+        add_header access-control-allow-origin *;
+        proxy_pass      http://webservers;
+        proxy_set_header X-Forwarded-Host $host:$server_port;
+        proxy_set_header  X-Real-IP  $remote_addr;
+        proxy_set_header    Origin        $host:$server_port;
+        proxy_set_header    Referer       $host:$server_port;
+    }
+
+    location ^~ /socket.io/ {
+        add_header access-control-allow-origin *;
+        proxy_pass      http://webservers;
+        proxy_set_header X-Forwarded-Host $host:$server_port;
+        proxy_set_header  X-Real-IP  $remote_addr;
+        proxy_set_header    Origin        $host:$server_port;
+        proxy_set_header    Referer       $host:$server_port;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+
+        # WebScoket Support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
+```
 ### 数据库准备
 ```
 cd /path/to/walle-web/walle/config
@@ -56,5 +101,9 @@ mysql  -hlocalhost -uroot -p -e'CREATE SCHEMA walle'
 - u后跟用户名
 ### 数据库初始化
 ```
-sh admin.sh migration
+bash admin.sh migration
+```
+### 启动
+```
+bash admin.sh start (bash admin.sh restart)
 ```
